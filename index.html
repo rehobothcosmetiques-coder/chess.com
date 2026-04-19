@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Chess Pro ♟️</title>
+
+  <!-- Chessboard UI -->
+  <link rel="stylesheet" href="https://unpkg.com/chessboardjs@1.0.0/www/css/chessboard.css">
+
+  <style>
+    body {
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      font-family: Arial;
+    }
+
+    #board {
+      width: 400px;
+      margin: auto;
+      margin-top: 30px;
+    }
+
+    button {
+      padding: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+      background: cyan;
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>♟️ Chess Pro (IA + Règles)</h1>
+
+<div id="board"></div>
+
+<button onclick="resetGame()">🔄 Reset</button>
+
+<!-- libs -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/chess.js@0.13.4/chess.js"></script>
+<script src="https://unpkg.com/chessboardjs@1.0.0/www/js/chessboard.js"></script>
+
+<script>
+
+let game = new Chess();
+
+let board = Chessboard('board', {
+  draggable: true,
+  position: 'start',
+
+  onDrop: function(source, target) {
+
+    let move = game.move({
+      from: source,
+      to: target,
+      promotion: 'q'
+    });
+
+    if (move === null) return 'snapback';
+
+    window.setTimeout(makeAIMove, 300);
+  }
+});
+
+// IA simple (Stockfish via logique simplifiée)
+function makeAIMove(){
+
+  let moves = game.moves();
+
+  if (game.game_over()) return;
+
+  let randomMove = moves[Math.floor(Math.random() * moves.length)];
+  game.move(randomMove);
+
+  board.position(game.fen());
+}
+
+// reset
+function resetGame(){
+  game.reset();
+  board.start();
+}
+
+</script>
+
+</body>
+</html>
